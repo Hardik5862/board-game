@@ -8,13 +8,31 @@ const BoardBg = () => {
     [13, 14, 15, 16],
   ];
 
+  const imageClassname = (id) => {
+    if (id % 2 === 0) {
+      return styles.img_rot;
+    } else {
+      return "";
+    }
+  };
+
   return (
     <div className={styles.main}>
       {board.map((row, i) => {
         return (
           <div className={styles.row} key={i}>
             {row.map((cell, j) => {
-              return <div className={styles.cell} key={j}></div>;
+              return (
+                <div className={styles.cell} key={j}>
+                  <img
+                    src="/line.png"
+                    alt="bg-line"
+                    width={100}
+                    height={100}
+                    className={imageClassname(i + j)}
+                  />
+                </div>
+              );
             })}
           </div>
         );

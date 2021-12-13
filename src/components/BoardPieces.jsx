@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import PlayerMoveContext from "../store/player-move-context";
 import { matrixUpdate } from "../game/matrix-update";
 import styles from "./BoardPieces.module.css";
 
 const BoardPieces = () => {
+  const { addMove } = useContext(PlayerMoveContext);
   const [surc, setSurc] = useState([-1, -1]);
   const [dest, setDest] = useState([-1, -1]);
   const [step, setStep] = useState(1);
   const [playerTurn, setPlayerTurn] = useState(1);
-  // eslint-disable-next-line no-unused-vars
   const [pieces, setPieces] = useState([
     [1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1],
@@ -27,15 +28,15 @@ const BoardPieces = () => {
   useEffect(() => {
     if (step === 3) {
       setPieces((prevState) => matrixUpdate(prevState, playerTurn, surc, dest));
+      addMove({ player: playerTurn, surc, dest });
       setStep(1);
       setSurc([-1, -1]);
       setDest([-1, -1]);
       setPlayerTurn((prevState) => (prevState === 1 ? 2 : 1));
     }
-  }, [dest, playerTurn, step, surc]);
+  }, [addMove, dest, playerTurn, step, surc]);
 
   const handleMove = (player, coords) => {
-    console.log(`Player: ${player} clicked { ${coords[0]}, ${coords[1]} }`);
     if (player === playerTurn) {
       if (step === 1) {
         setSurc(coords);

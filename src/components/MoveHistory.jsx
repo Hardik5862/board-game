@@ -26,7 +26,7 @@ const MoveHistory = () => {
         <tbody>
           {moves.map((move, index) => (
             <tr key={index} className={styles.color_even}>
-              <td className={styles.border}>{index}</td>
+              <td className={styles.border}>{index + 1}</td>
               <td className={styles.border}>{move.player}</td>
               <td
                 className={styles.border}

@@ -26,6 +26,7 @@
   z-index: 100;
   display: grid;
   place-items: center;
+  cursor: pointer;
 }
 
 .source {

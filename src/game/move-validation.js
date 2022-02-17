@@ -1,9 +1,26 @@
 export const isMoveValid = (player, surc, dest, mat) => {
+  if (
+    !(
+      surc[0] >= 0 &&
+      surc[0] < 5 &&
+      surc[1] >= 0 &&
+      surc[1] < 5 &&
+      dest[0] >= 0 &&
+      dest[0] < 5 &&
+      dest[1] >= 0 &&
+      dest[1] < 5
+    )
+  ) {
+    return false;
+  }
+
   if (player === 1) {
     return isMoveValidP1(surc, dest, mat);
   } else if (player === 2) {
     return isMoveValidP2(surc, dest, mat);
   }
+
+  return false;
 };
 
 const isMoveValidP1 = (surc, dest, mat) => {

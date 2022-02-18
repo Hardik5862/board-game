@@ -4,6 +4,7 @@ import { matrixUpdate } from "../game/matrix-update";
 import styles from "./BoardPieces.module.css";
 import { isMoveValid } from "../game/move-validation";
 import { isMoveAvailable } from "../game/move-prediction";
+import { checkWinner } from "../game/check-winner";
 
 const playerPieceClassname = (player) => {
   if (player === 1) {
@@ -21,7 +22,7 @@ const sourceClassname = (surc, i, j) => {
 };
 
 const BoardPieces = () => {
-  const { addMove } = useContext(PlayerMoveContext);
+  const { addMove, setGameWinner } = useContext(PlayerMoveContext);
   const [surc, setSurc] = useState([-1, -1]);
   const [dest, setDest] = useState([-1, -1]);
   const [moves, setMoves] = useState([]);
@@ -45,6 +46,14 @@ const BoardPieces = () => {
       setPlayerTurn((prevState) => (prevState === 1 ? 2 : 1));
     }
   }, [addMove, dest, playerTurn, step, surc]);
+
+  useEffect(() => {
+    const winner = checkWinner(pieces, playerTurn);
+    if (winner !== -1) {
+      console.log("winner", winner);
+      setGameWinner(winner);
+    }
+  }, [pieces, playerTurn, setGameWinner]);
 
   const possibleDestClassname = (i, j) => {
     const isPossibleDest = moves.find((move) => move[0] === i && move[1] === j);

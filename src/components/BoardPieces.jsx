@@ -3,6 +3,7 @@ import PlayerMoveContext from "../store/player-move-context";
 import { matrixUpdate } from "../game/matrix-update";
 import styles from "./BoardPieces.module.css";
 import { isMoveValid } from "../game/move-validation";
+import { isMoveAvailable } from "../game/move-prediction";
 
 const playerPieceClassname = (player) => {
   if (player === 1) {
@@ -23,6 +24,7 @@ const BoardPieces = () => {
   const { addMove } = useContext(PlayerMoveContext);
   const [surc, setSurc] = useState([-1, -1]);
   const [dest, setDest] = useState([-1, -1]);
+  const [moves, setMoves] = useState([]);
   const [step, setStep] = useState(1);
   const [playerTurn, setPlayerTurn] = useState(1);
   const [pieces, setPieces] = useState([
@@ -44,17 +46,30 @@ const BoardPieces = () => {
     }
   }, [addMove, dest, playerTurn, step, surc]);
 
+  const possibleDestClassname = (i, j) => {
+    const isPossibleDest = moves.find((move) => move[0] === i && move[1] === j);
+
+    if (isPossibleDest && isPossibleDest.length > 0) {
+      return `${styles.possible_dest}`;
+    }
+
+    return "";
+  };
+
   const handleMove = (player, coords) => {
     if (step === 1) {
       if (player === playerTurn) {
         setSurc(coords);
         setStep(2);
+        setMoves(isMoveAvailable(player, coords, pieces));
       }
     } else if (step === 2 && pieces[coords[0]][coords[1]] === playerTurn) {
       setSurc(coords);
+      setMoves(isMoveAvailable(player, coords, pieces));
     } else if (step === 2 && isMoveValid(playerTurn, surc, coords, pieces)) {
       setDest(coords);
       setStep(3);
+      setMoves([]);
     }
   };
 
@@ -67,7 +82,11 @@ const BoardPieces = () => {
               return (
                 <div className={styles.piece} key={j}>
                   <div
-                    className={sourceClassname(surc, i, j)}
+                    className={`${sourceClassname(
+                      surc,
+                      i,
+                      j
+                    )} ${possibleDestClassname(i, j)}`}
                     onClick={() => handleMove(piece, [i, j])}
                   >
                     {piece !== 0 ? (

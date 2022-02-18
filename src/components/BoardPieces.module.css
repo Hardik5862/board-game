@@ -33,6 +33,10 @@
   background-color: black;
 }
 
+.possible_dest {
+  background-color: yellow;
+}
+
 .piece .piece_container span {
   height: 30px;
   width: 30px;
